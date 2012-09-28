@@ -67,21 +67,21 @@ Client Performance Notes
 The browser only has to make an extra OPTIONS request for a cross-site AJAX call if additional headers are specified.
 So this cross site jQuery AJAX call does not result in an OPTIONS request:
 
-        $.ajax("https://api.notmyserver.com/rest/stuff/123", {
-            data: data,
-            dataType: 'json',
-            type: 'get',
-            success: callback,
-        });
+    $.ajax("https://api.notmyserver.com/rest/stuff/123", {
+        data: data,
+        dataType: 'json',
+        type: 'get',
+        success: callback,
+    });
 
 Whereas this one does (at least the first time):
 
-        $.ajax("https://api.notmyserver.com/rest/stuff/123", {
-            data: data,
-            dataType: 'json',
-            type: 'get',
-            success: callback,
-            headers: {Authorization: "Basic ..."}
-        });
+    $.ajax("https://api.notmyserver.com/rest/stuff/123", {
+        data: data,
+        dataType: 'json',
+        type: 'get',
+        success: callback,
+        headers: {Authorization: "Basic ..."}
+    });
 
 So if you can authenticate or whatever using query parameters instead of headers it can reduce latency.
