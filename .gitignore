@@ -1,0 +1,7 @@
+*.iml
+.idea
+grails
+plugin.xml
+*.zip
+target
+
