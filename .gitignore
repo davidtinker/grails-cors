@@ -4,4 +4,6 @@ grails
 plugin.xml
 *.zip
 target
-
+web-app
+*.log
+.settings
