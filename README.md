@@ -16,7 +16,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.0.0"
+        runtime ":cors:1.0.1"
         ...
     }
 
@@ -64,7 +64,7 @@ headers are sent back to the client and the browser will deny the request.
 Client Performance Notes
 ------------------------
 
-The browser only has to make an extra OPTIONS request for a cross-site AJAX call if additional headers are specified.
+The browser only has to make an extra OPTIONS request for a cross-site AJAX GET if additional headers are specified.
 So this cross site jQuery AJAX call does not result in an OPTIONS request:
 
     $.ajax("https://api.notmyserver.com/rest/stuff/123", {
@@ -85,3 +85,8 @@ Whereas this one does (at least the first time):
     });
 
 So if you can authenticate or whatever using query parameters instead of headers it can reduce latency.
+
+Changelog
+---------
+
+1.0.1: Added Content-Type to default Access-Control-Allow-Headers
