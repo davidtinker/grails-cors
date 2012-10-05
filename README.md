@@ -24,7 +24,7 @@ The default configuration installs a servlet filter that adds the following head
 
     Access-Control-Allow-Origin: *
     Access-Control-Allow-Credentials: true
-    Access-Control-Allow-Headers: origin, authorization, accept, x-requested-with
+    Access-Control-Allow-Headers: origin, authorization, accept, content-type, x-requested-with
     Access-Control-Max-Age: 3600
 
 The 'Access-Control-Allow-Origin' header is also added to non-OPTIONS requests (GET, POST et al.).
