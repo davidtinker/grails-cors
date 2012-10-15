@@ -16,7 +16,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.0.1"
+        runtime ":cors:1.0.2"
         ...
     }
 
@@ -25,6 +25,7 @@ The default configuration installs a servlet filter that adds the following head
     Access-Control-Allow-Origin: *
     Access-Control-Allow-Credentials: true
     Access-Control-Allow-Headers: origin, authorization, accept, content-type, x-requested-with
+    Access-Control-Allow-Methods: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS
     Access-Control-Max-Age: 3600
 
 The 'Access-Control-Allow-Origin' header is also added to non-OPTIONS requests (GET, POST et al.).
@@ -89,4 +90,5 @@ So if you can authenticate or whatever using query parameters instead of headers
 Changelog
 ---------
 
+1.0.2: Added Access-Control-Allow-Methods header to OPTIONS request
 1.0.1: Added Content-Type to default Access-Control-Allow-Headers
