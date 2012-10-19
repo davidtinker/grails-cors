@@ -16,7 +16,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.0.2"
+        runtime ":cors:1.0.3"
         ...
     }
 
@@ -90,5 +90,6 @@ So if you can authenticate or whatever using query parameters instead of headers
 Changelog
 ---------
 
+1.0.3: Bumped version no. to workaround plugin publishing issue
 1.0.2: Added Access-Control-Allow-Methods header to OPTIONS request
 1.0.1: Added Content-Type to default Access-Control-Allow-Headers
