@@ -26,9 +26,10 @@ public class CorsFilter implements Filter {
             allowOriginRegex = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         } else {
             headers.put("Access-Control-Allow-Origin", "*");
+            headers.put("Access-Control-Allow-Credentials", "true");
         }
 
-        headers.put("Access-Control-Allow-Credentials", "true");
+
         headers.put("Access-Control-Allow-Headers", "origin, authorization, accept, content-type, x-requested-with");
         headers.put("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS");
         headers.put("Access-Control-Max-Age", "3600");
@@ -59,6 +60,7 @@ public class CorsFilter implements Filter {
                     checkOrigin(req, resp);
                 } else {
                     resp.addHeader("Access-Control-Allow-Origin", allowOrigin);
+                    resp.addHeader("Access-Control-Allow-Credentials", "true");
                 }
             }
         }
@@ -69,6 +71,7 @@ public class CorsFilter implements Filter {
         String origin = req.getHeader("Origin");
         if (origin != null && allowOriginRegex.matcher(origin).matches()) {
             resp.addHeader("Access-Control-Allow-Origin", origin);
+            resp.addHeader("Access-Control-Allow-Credentials", "true");
             return true;
         }
         return false;
