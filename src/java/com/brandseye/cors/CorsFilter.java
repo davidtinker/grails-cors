@@ -1,6 +1,5 @@
 package com.brandseye.cors;
 
-import javax.persistence.Access;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,12 +25,11 @@ public class CorsFilter implements Filter {
             allowOriginRegex = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         } else {
             headers.put("Access-Control-Allow-Origin", "*");
-            headers.put("Access-Control-Allow-Credentials", "true");
         }
-
 
         headers.put("Access-Control-Allow-Headers", "origin, authorization, accept, content-type, x-requested-with");
         headers.put("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS");
+        headers.put("Access-Control-Allow-Credentials", "true");
         headers.put("Access-Control-Max-Age", "3600");
 
         for (Enumeration<String> i = cfg.getInitParameterNames(); i.hasMoreElements(); ) {

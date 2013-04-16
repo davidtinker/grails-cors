@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse
 /**
  * @author Peter Schneider-Manzell
  */
-@TestFor(CorsFilter)
 class CorsFilterTest {
 
     CorsFilter underTest;
