@@ -66,6 +66,53 @@ class CorsFilterTest {
         executeTest(filterInitParams,expectedHeadersForHttpMethods,origin)
     }
 
+    public void testDefaultHeadersForOptionsRequestsWithoutOriginRegexpAndNotAllowedOrigin(){
+        def expectedHeadersForHttpMethods = [
+                'OPTIONS':[],
+                'GET':[],
+                'PUT':[],
+                'DELETE':[],
+                'POST':[]
+        ]
+        def filterInitParams = [:]
+        filterInitParams['header:Access-Control-Allow-Origin'] = 'http://www.grails.org'
+        String origin = "http://www.google.com"
+        executeTest(filterInitParams,expectedHeadersForHttpMethods,origin)
+    }
+
+    public void testExposedHeaders() {
+        def headers = ["Access-Control-Allow-Origin","Access-Control-Allow-Credentials","Access-Control-Expose-Headers"]
+        def expectedHeadersForHttpMethods = [
+                'OPTIONS':defaultHeadersForAllowedOptionsRequest,
+                'GET':headers,
+                'PUT':headers,
+                'DELETE':headers,
+                'POST':headers
+        ]
+        def filterInitParams = [:]
+        filterInitParams['allow.origin.regex'] = '.*grails.*'
+        filterInitParams['expose.headers'] = "X-custom-header"
+        String origin = "http://www.grails.org"
+        executeTest(filterInitParams,expectedHeadersForHttpMethods,origin)
+    }
+
+    public void testValueOfExposedHeaders() {
+        def underTest = new CorsFilter()
+        def expected = 'X-custom-header1,X-custom-header2'
+        MockFilterConfig filterConfig = new MockFilterConfig()
+        filterConfig.addInitParameter('allow.origin.regex','.*grails.*')
+        filterConfig.addInitParameter('expose.headers',expected)
+        underTest.init(filterConfig)
+
+        HttpServletRequest req = new MockHttpServletRequest()
+        req.setMethod("PUT")
+        req.addHeader("Origin",'http://www.grails.org')
+        HttpServletResponse res = new MockHttpServletResponse()
+        underTest.doFilter(req,res,new MockFilterChain())
+        assert  res.getHeader('Access-Control-Expose-Headers').equals('X-custom-header1,X-custom-header2') : "Access-Control-Expose-Headers, expected ${expected}, got ${res.getHeader('Access-Control-Expose-Headers')}"
+
+    }
+
 
     private void executeTest(Map<String,String> filterInitParams,Map<String,Set<String>> expectedHeadersForHttpMethods,String origin){
         underTest = new CorsFilter()
