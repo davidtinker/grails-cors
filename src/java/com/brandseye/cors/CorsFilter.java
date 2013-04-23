@@ -14,32 +14,34 @@ import java.util.regex.Pattern;
  */
 public class CorsFilter implements Filter {
 
-    private final Map<String, String> headers = new LinkedHashMap<String, String>();
+    private final Map<String, String> optionsHeaders = new LinkedHashMap<String, String>();
 
     private Pattern allowOriginRegex;
     private String allowOrigin;
+    private String exposeHeaders;
 
     public void init(FilterConfig cfg) throws ServletException {
         String regex = cfg.getInitParameter("allow.origin.regex");
         if (regex != null) {
             allowOriginRegex = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         } else {
-            headers.put("Access-Control-Allow-Origin", "*");
+            optionsHeaders.put("Access-Control-Allow-Origin", "*");
         }
 
-        headers.put("Access-Control-Allow-Headers", "origin, authorization, accept, content-type, x-requested-with");
-        headers.put("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS");
-        headers.put("Access-Control-Allow-Credentials", "true");
-        headers.put("Access-Control-Max-Age", "3600");
-
+        optionsHeaders.put("Access-Control-Allow-Headers", "origin, authorization, accept, content-type, x-requested-with");
+        optionsHeaders.put("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS");
+        optionsHeaders.put("Access-Control-Allow-Credentials", "true");
+        optionsHeaders.put("Access-Control-Max-Age", "3600");
         for (Enumeration<String> i = cfg.getInitParameterNames(); i.hasMoreElements(); ) {
             String name = i.nextElement();
             if (name.startsWith("header:")) {
-                headers.put(name.substring(7), cfg.getInitParameter(name));
+                optionsHeaders.put(name.substring(7), cfg.getInitParameter(name));
             }
         }
 
-        allowOrigin = headers.get("Access-Control-Allow-Origin");
+        allowOrigin = optionsHeaders.get("Access-Control-Allow-Origin");
+
+        exposeHeaders = cfg.getInitParameter("expose.headers");
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
@@ -48,17 +50,14 @@ public class CorsFilter implements Filter {
             HttpServletRequest req = (HttpServletRequest)request;
             HttpServletResponse resp = (HttpServletResponse)response;
             if ("OPTIONS".equals(req.getMethod())) {
-                if (allowOriginRegex == null || checkOrigin(req, resp)) {
-                    for (Map.Entry<String, String> e : headers.entrySet()) {
+                if (checkOrigin(req, resp)) {
+                    for (Map.Entry<String, String> e : optionsHeaders.entrySet()) {
                         resp.addHeader(e.getKey(), e.getValue());
                     }
                 }
-            } else {
-                if (allowOriginRegex != null) {
-                    checkOrigin(req, resp);
-                } else {
-                    resp.addHeader("Access-Control-Allow-Origin", allowOrigin);
-                    resp.addHeader("Access-Control-Allow-Credentials", "true");
+            } else if (checkOrigin(req, resp)) {
+                if (exposeHeaders != null) {
+                    resp.addHeader("Access-Control-Expose-Headers", exposeHeaders);
                 }
             }
         }
@@ -67,12 +66,26 @@ public class CorsFilter implements Filter {
 
     private boolean checkOrigin(HttpServletRequest req, HttpServletResponse resp) {
         String origin = req.getHeader("Origin");
-        if (origin != null && allowOriginRegex.matcher(origin).matches()) {
+        if (origin == null) {
+            //no origin; per W3C spec, terminate further processing for both preflight and actual requests
+            return false;
+        }
+
+        boolean matches = false;
+        //check if using regex to match origin
+        if (allowOriginRegex != null) {
+            matches = allowOriginRegex.matcher(origin).matches();
+        } else if (allowOrigin != null) {
+            matches = allowOrigin.equals("*") || allowOrigin.equals(origin);
+        }
+
+        if (matches) {
             resp.addHeader("Access-Control-Allow-Origin", origin);
             resp.addHeader("Access-Control-Allow-Credentials", "true");
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public void destroy() {
