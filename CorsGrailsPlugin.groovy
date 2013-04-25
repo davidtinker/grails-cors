@@ -17,6 +17,8 @@ class CorsGrailsPlugin {
     def doWithWebDescriptor = { xml ->
         def cfg = application.config.cors
 
+        if (cfg.containsKey('enabled') && !cfg.enabled) return
+
         def contextParam = xml.'context-param'
         contextParam[contextParam.size() - 1] + {
             'filter' {

@@ -16,7 +16,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.0.5"
+        runtime ":cors:1.1.0"
         ...
     }
 
@@ -68,6 +68,10 @@ You can specify a comma-delimited list of response headers that should be expose
 
     cors.expose.headers = 'X-app-header1,X-app-header2'
 
+You can disable the filter if needed. Note that the filter defaults to enabled.
+
+    cors.enabled = false
+
 Client Performance Notes
 ------------------------
 
@@ -100,6 +104,7 @@ Changelog
   is potentially a breaking change but is theoretically "more compliant" with the spec
 - No CORS headers are sent back if the client does not supply an 'Origin' header
 - Added 'Access-Control-Expose-Headers' option via 'cors.expose.headers' Config.groovy setting
+- Added 'cors.enabled' Config.groovy setting to explicitly enable/disabled the filter (filter is enabled by default)
 
 1.0.4: Added Access-Control-Allow-Credentials: true
 
