@@ -54,7 +54,7 @@ You can override the default values used for the headers by supplying a headers 
         'Access-Control-Allow-Origin': 'http://app.example.com',
         'My-Custom-Header': 'some value']
 
-Note that if you want to specify more than one host for 'Access-Control-Allow-Origin' there are issue with
+Note that if you want to specify more than one host for 'Access-Control-Allow-Origin' there are issues with
 browser support. The recommended approach is to check the 'Origin' header of the request and echo it back
 if you are happy with it. The CORS plugin implements this using a regex to match allowed origins:
 
