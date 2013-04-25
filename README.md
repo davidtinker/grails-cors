@@ -16,7 +16,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.0.4"
+        runtime ":cors:1.0.5"
         ...
     }
 
@@ -29,7 +29,8 @@ The default configuration installs a servlet filter that adds the following head
     Access-Control-Max-Age: 3600
 
 The 'Access-Control-Allow-Origin' and 'Access-Control-Allow-Credentials' headers are also added to non-OPTIONS
-requests (GET, POST et al.).  If the plugin is configured to produce an 'Access-Control-Expose-Headers' header, it will be added to non-OPTIONS requests as well.
+requests (GET, POST et al.).  If the plugin is configured to produce an 'Access-Control-Expose-Headers' header,
+it will be added to non-OPTIONS requests as well.
 
 These headers permit Javascript code loaded from anywhere to make AJAX calls to your application including specifying
 an 'Authorization' header (e.g. for Basic authentication). The browser will cache the results of the OPTIONS request
@@ -94,7 +95,11 @@ So if you can authenticate or whatever using query parameters instead of headers
 
 Changelog
 ---------
-1.0.5: Added Access-Control-Expose-Headers
+1.1.0:
+- If 'Access-Control-Allow-Origin' is '*' (the default) then the 'Origin' header is echoed back instead of '*'. This
+  is potentially a breaking change but is theoretically "more compliant" with the spec
+- No CORS headers are sent back if the client does not supply an 'Origin' header
+- Added 'Access-Control-Expose-Headers' option via 'cors.expose.headers' Config.groovy setting
 
 1.0.4: Added Access-Control-Allow-Credentials: true
 
