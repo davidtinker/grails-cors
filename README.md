@@ -16,7 +16,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.1.0"
+        runtime ":cors:1.1.1"
         ...
     }
 
