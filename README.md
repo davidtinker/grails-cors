@@ -99,6 +99,8 @@ So if you can authenticate or whatever using query parameters instead of headers
 
 Changelog
 ---------
+1.1.1: Now works with Spring Security basic authentication (thanks James Hardwick)
+
 1.1.0:
 - If 'Access-Control-Allow-Origin' is '*' (the default) then the 'Origin' header is echoed back instead of '*'. This
   is potentially a breaking change but is theoretically "more compliant" with the spec
