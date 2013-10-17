@@ -59,6 +59,12 @@ public class CorsFilter implements Filter {
                     for (Map.Entry<String, String> e : optionsHeaders.entrySet()) {
                         resp.addHeader(e.getKey(), e.getValue());
                     }
+
+                    // We need to return here since we don't want the chain to further process
+                    // a preflight request since this can lead to unexpected processing of the preflighted
+                    // request or a 405 - method not allowed in Grails 2.3
+                    return;
+
                 }
             } else if (checkOrigin(req, resp)) {
                 if (exposeHeaders != null) {
