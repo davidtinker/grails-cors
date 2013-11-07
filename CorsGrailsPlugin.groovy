@@ -3,7 +3,7 @@ import com.brandseye.cors.CorsFilter
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
 class CorsGrailsPlugin {
-    def version = "1.1.1"
+    def version = "1.1.2"
     def grailsVersion = "2.0 > *"
     def title = "CORS Plugin"
     def author = "David Tinker"
@@ -74,5 +74,13 @@ class CorsGrailsPlugin {
                 }
             }
         }
+    }
+
+    def getWebXmlFilterOrder() {
+        def cfg = application.config.cors
+        if (cfg.containsKey('enabled') && !cfg.enabled) return
+        def FilterManager = getClass().getClassLoader().loadClass('grails.plugin.webxml.FilterManager')
+        // Be before the earliest Resource filter.
+        ['cors-headers': FilterManager.DEFAULT_POSITION - 400]
     }
 }

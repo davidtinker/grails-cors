@@ -16,7 +16,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.1.1"
+        runtime ":cors:1.1.2"
         ...
     }
 
@@ -99,6 +99,10 @@ So if you can authenticate or whatever using query parameters instead of headers
 
 Changelog
 ---------
+1.1.2:
+- The CORS servlet filter now processes requests ahead of the resources filters (thanks Steve Loeppky)
+- OPTIONS requests are no longer passed down the filter chain (thanks Marcus Krantz)
+
 1.1.1: Now works with Spring Security basic authentication (thanks James Hardwick)
 
 1.1.0:
