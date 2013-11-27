@@ -99,6 +99,9 @@ So if you can authenticate or whatever using query parameters instead of headers
 
 Changelog
 ---------
+1.1.3:
+- Fixed issue with getWebXmlFilterOrder not working in some circumstances (thanks Danilo Tuler)
+
 1.1.2:
 - The CORS servlet filter now processes requests ahead of the resources filters (thanks Steve Loeppky)
 - OPTIONS requests are no longer passed down the filter chain (thanks Marcus Krantz)
