@@ -77,8 +77,6 @@ class CorsGrailsPlugin {
     }
 
     def getWebXmlFilterOrder() {
-        def cfg = application.config.cors
-        if (cfg.containsKey('enabled') && !cfg.enabled) return
         def FilterManager = getClass().getClassLoader().loadClass('grails.plugin.webxml.FilterManager')
         // Be before the earliest Resource filter.
         ['cors-headers': FilterManager.DEFAULT_POSITION - 400]
