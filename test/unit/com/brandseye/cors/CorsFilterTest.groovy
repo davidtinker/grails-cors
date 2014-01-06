@@ -16,9 +16,6 @@
 
 package com.brandseye.cors
 
-import grails.test.mixin.TestFor
-
-import org.junit.Test
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockFilterConfig
 import org.springframework.mock.web.MockHttpServletRequest
@@ -30,6 +27,7 @@ import javax.servlet.http.HttpServletResponse
 /**
  * @author Peter Schneider-Manzell
  */
+@SuppressWarnings("GroovyUnusedDeclaration")
 class CorsFilterTest {
 
     CorsFilter underTest;
@@ -129,6 +127,56 @@ class CorsFilterTest {
 
     }
 
+    void testAllowOriginStar() {
+        def underTest = new CorsFilter()
+
+        MockFilterConfig filterConfig = new MockFilterConfig()
+        filterConfig.addInitParameter('header:Access-Control-Allow-Origin','*')
+        underTest.init(filterConfig)
+
+        HttpServletRequest req = new MockHttpServletRequest()
+        req.setMethod("PUT")
+        req.addHeader("Origin",'http://www.grails.org')
+        HttpServletResponse res = new MockHttpServletResponse()
+        underTest.doFilter(req, res, new MockFilterChain())
+        assert '*' == res.getHeader('Access-Control-Allow-Origin')
+    }
+
+    void testAllowOriginEchosOrigin() {
+        def underTest = new CorsFilter()
+
+        underTest.init(new MockFilterConfig())
+
+        HttpServletRequest req = new MockHttpServletRequest()
+        req.setMethod("PUT")
+        req.addHeader("Origin",'http://www.grails.org')
+        HttpServletResponse res = new MockHttpServletResponse()
+        underTest.doFilter(req, res, new MockFilterChain())
+        assert 'http://www.grails.org' == res.getHeader('Access-Control-Allow-Origin')
+    }
+
+    void testAllowOriginStarWorksWithRegex() {
+        def underTest = new CorsFilter()
+
+        MockFilterConfig filterConfig = new MockFilterConfig()
+        filterConfig.addInitParameter('header:Access-Control-Allow-Origin', '*')
+        filterConfig.addInitParameter('allow.origin.regex', '.*grails.*')
+        underTest.init(filterConfig)
+
+        HttpServletRequest req = new MockHttpServletRequest()
+        req.setMethod("PUT")
+        req.addHeader("Origin",'http://www.grails.org')
+        HttpServletResponse res = new MockHttpServletResponse()
+        underTest.doFilter(req, res, new MockFilterChain())
+        assert '*' == res.getHeader('Access-Control-Allow-Origin')
+
+        req = new MockHttpServletRequest()
+        req.setMethod("PUT")
+        req.addHeader("Origin",'http://www.wibble.com')
+        res = new MockHttpServletResponse()
+        underTest.doFilter(req, res, new MockFilterChain())
+        assert null == res.getHeader('Access-Control-Allow-Origin')
+    }
 
     private void executeTest(Map<String,String> filterInitParams,Map<String,Set<String>> expectedHeadersForHttpMethods,String origin){
         underTest = new CorsFilter()

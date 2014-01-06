@@ -16,7 +16,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.1.2"
+        runtime ":cors:1.1.4"
         ...
     }
 
@@ -63,6 +63,12 @@ if you are happy with it. The CORS plugin implements this using a regex to match
 
 If 'Origin' header matches the regex then it is echoed back as 'Access-Control-Allow-Origin' otherwise no CORS
 headers are sent back to the client and the browser will deny the request.
+
+Note that you can always send back '*' instead of echoing the 'Origin' header by including:
+
+    cors.headers = ['Access-Control-Allow-Origin': '*']
+
+This can be combined with cors.allow.origin.regex to limit allowed domains.
 
 You can specify a comma-delimited list of response headers that should be exposed to the client:
 
@@ -116,6 +122,13 @@ limitations under the License.
 
 Changelog
 ---------
+1.1.4:
+- Fixed issue with Access-Control-Allow-Origin in cors.headers being ignored. If cors.headers does not contain
+  Access-Control-Allow-Origin then any Origin accepted (any or those matching cors.allow.origin.regex) is echoed
+  back. If cors.headers does contain Access-Control-Allow-Origin then this value is returned for accepted Origin's
+  (i.e. you can use this in combination with cors.allow.origin.regex or set it to '*' to always send back '*' instead
+  of the Origin header, useful if the result is cached by a CDN and the Origin varies).
+
 1.1.3:
 - Fixed issue with getWebXmlFilterOrder not working in some circumstances (thanks Danilo Tuler)
 

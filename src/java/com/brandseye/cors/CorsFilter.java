@@ -37,13 +37,6 @@ public class CorsFilter implements Filter {
     private String exposeHeaders;
 
     public void init(FilterConfig cfg) throws ServletException {
-        String regex = cfg.getInitParameter("allow.origin.regex");
-        if (regex != null) {
-            allowOriginRegex = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        } else {
-            optionsHeaders.put("Access-Control-Allow-Origin", "*");
-        }
-
         optionsHeaders.put("Access-Control-Allow-Headers", "origin, authorization, accept, content-type, x-requested-with");
         optionsHeaders.put("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS");
         optionsHeaders.put("Access-Control-Max-Age", "3600");
@@ -54,13 +47,11 @@ public class CorsFilter implements Filter {
             }
         }
 
-        //maintained for backward compatibility on how to set allowOrigin if not
-        //using a regex
-        allowOrigin = optionsHeaders.get("Access-Control-Allow-Origin");
-        //since all methods now go through checkOrigin() to apply the Access-Control-Allow-Origin
-        //header, and that header should have a single value of the requesting Origin since
-        //Access-Control-Allow-Credentials is always true, we remove it from the options headers
-        optionsHeaders.remove("Access-Control-Allow-Origin");
+        String regex = cfg.getInitParameter("allow.origin.regex");
+        if (regex != null) {
+            allowOriginRegex = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        }
+        allowOrigin = optionsHeaders.remove("Access-Control-Allow-Origin");
 
         exposeHeaders = cfg.getInitParameter("expose.headers");
     }
@@ -98,16 +89,16 @@ public class CorsFilter implements Filter {
             return false;
         }
 
-        boolean matches = false;
-        //check if using regex to match origin
+        boolean matches;
         if (allowOriginRegex != null) {
             matches = allowOriginRegex.matcher(origin).matches();
-        } else if (allowOrigin != null) {
-            matches = allowOrigin.equals("*") || allowOrigin.equals(origin);
+        } else {
+            matches = allowOrigin == null || allowOrigin.equals("*") || allowOrigin.equals(origin);
         }
 
         if (matches) {
-            resp.addHeader("Access-Control-Allow-Origin", origin);
+            // if no 'Access-Control-Allow-Origin' specified in cors.headers then echo back Origin
+            resp.addHeader("Access-Control-Allow-Origin", allowOrigin == null ? origin : allowOrigin);
             resp.addHeader("Access-Control-Allow-Credentials", "true");
             return true;
         } else {

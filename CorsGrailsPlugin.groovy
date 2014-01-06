@@ -19,7 +19,7 @@ import com.brandseye.cors.CorsFilter
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
 class CorsGrailsPlugin {
-    def version = "1.1.3"
+    def version = "1.1.4"
     def grailsVersion = "2.0 > *"
     def title = "CORS Plugin"
     def author = "David Tinker"
