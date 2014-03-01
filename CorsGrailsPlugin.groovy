@@ -38,9 +38,9 @@ class CorsGrailsPlugin {
     def doWithSpring = {
         // If using Spring Security's Basic Auth, swap out the BasicAuthenticationEntryPoint bean to prevent
         // authenticating on OPTIONS requests. See https://github.com/davidtinker/grails-cors/issues/12 for more info.
-        if (CH.config.grails.plugins.springsecurity?.useBasicAuth) {
+        if (application.config.grails.plugin.springsecurity?.useBasicAuth) {
             basicAuthenticationEntryPoint(CorsCompatibleBasicAuthenticationEntryPoint) { bean ->
-                realmName = CH.config.grails.plugins.springsecurity.basic.realmName
+                realmName = application.config.grails.plugin.springsecurity.basic.realmName
             }
         }
     }
