@@ -26,19 +26,20 @@ grails.project.dependency.resolution = {
 
     dependencies {
         //test ":grails-test-suite-base:$grailsVersion"
-	String springSecurityVersion = '3.2.3.RELEASE'
+    	String springSecurityVersion = '3.2.3.RELEASE'
         compile("org.springframework.security:spring-security-core:$springSecurityVersion") {
             transitive = false
         }
         compile("org.springframework.security:spring-security-web:$springSecurityVersion") {
-	    transitive = false
+            transitive = false
         }
+        test 'org.hamcrest:hamcrest-core:1.3'
     }
 
     plugins {
         compile ":webxml:1.4.1"
-	build(":release:3.0.1", ":rest-client-builder:1.0.3") {
-	   export = false
-	}
+        build(":release:3.0.1", ":rest-client-builder:1.0.3") {
+           export = false
+        }
     }
 }

@@ -122,6 +122,10 @@ limitations under the License.
 
 Changelog
 ---------
+1.1.5:
+- Got rid of deprecated ConfigHolder so plugin works with Grails 2.4
+- 
+
 1.1.4:
 - Fixed issue with Access-Control-Allow-Origin in cors.headers being ignored. If cors.headers does not contain
   Access-Control-Allow-Origin then any Origin accepted (any or those matching cors.allow.origin.regex) is echoed

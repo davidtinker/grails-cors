@@ -19,7 +19,7 @@ package com.brandseye.cors
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockFilterConfig
 import org.springframework.mock.web.MockHttpServletRequest
-import grails.util.MockHttpServletResponse
+import org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse
  * @author Peter Schneider-Manzell
  */
 @SuppressWarnings("GroovyUnusedDeclaration")
-class CorsFilterTest {
+class CorsFilterTest extends GroovyTestCase {
 
     CorsFilter underTest;
     def minimalHeadersForAllAllowedRequests = ["Access-Control-Allow-Origin","Access-Control-Allow-Credentials"]
@@ -121,7 +121,7 @@ class CorsFilterTest {
         HttpServletRequest req = new MockHttpServletRequest()
         req.setMethod("PUT")
         req.addHeader("Origin",'http://www.grails.org')
-        HttpServletResponse res = new MockHttpServletResponse()
+        HttpServletResponse res = new GrailsMockHttpServletResponse()
         underTest.doFilter(req,res,new MockFilterChain())
         assert  res.getHeader('Access-Control-Expose-Headers').equals('X-custom-header1,X-custom-header2') : "Access-Control-Expose-Headers, expected ${expected}, got ${res.getHeader('Access-Control-Expose-Headers')}"
 
@@ -137,7 +137,7 @@ class CorsFilterTest {
         HttpServletRequest req = new MockHttpServletRequest()
         req.setMethod("PUT")
         req.addHeader("Origin",'http://www.grails.org')
-        HttpServletResponse res = new MockHttpServletResponse()
+        HttpServletResponse res = new GrailsMockHttpServletResponse()
         underTest.doFilter(req, res, new MockFilterChain())
         assert '*' == res.getHeader('Access-Control-Allow-Origin')
     }
@@ -150,7 +150,7 @@ class CorsFilterTest {
         HttpServletRequest req = new MockHttpServletRequest()
         req.setMethod("PUT")
         req.addHeader("Origin",'http://www.grails.org')
-        HttpServletResponse res = new MockHttpServletResponse()
+        HttpServletResponse res = new GrailsMockHttpServletResponse()
         underTest.doFilter(req, res, new MockFilterChain())
         assert 'http://www.grails.org' == res.getHeader('Access-Control-Allow-Origin')
     }
@@ -166,14 +166,14 @@ class CorsFilterTest {
         HttpServletRequest req = new MockHttpServletRequest()
         req.setMethod("PUT")
         req.addHeader("Origin",'http://www.grails.org')
-        HttpServletResponse res = new MockHttpServletResponse()
+        HttpServletResponse res = new GrailsMockHttpServletResponse()
         underTest.doFilter(req, res, new MockFilterChain())
         assert '*' == res.getHeader('Access-Control-Allow-Origin')
 
         req = new MockHttpServletRequest()
         req.setMethod("PUT")
         req.addHeader("Origin",'http://www.wibble.com')
-        res = new MockHttpServletResponse()
+        res = new GrailsMockHttpServletResponse()
         underTest.doFilter(req, res, new MockFilterChain())
         assert null == res.getHeader('Access-Control-Allow-Origin')
     }
@@ -193,22 +193,21 @@ class CorsFilterTest {
             HttpServletRequest req = new MockHttpServletRequest()
             req.setMethod(httpMethod)
             req.addHeader("Origin",origin)
-            HttpServletResponse res = new MockHttpServletResponse()
+            HttpServletResponse res = new GrailsMockHttpServletResponse()
             underTest.doFilter(req,res,new MockFilterChain())
             assert  res.getHeaderNames().containsAll(expectedHeaders) : "Not all expected headers for request $httpMethod and origin $origin could be found! (expected: $expectedHeaders, got: ${res.getHeaderNames()})"
             assert  res.getHeaderNames().size() == expectedHeaders.size() : "Header count for request $httpMethod and origin $origin not the expected header count! (expected: $expectedHeaders, got: ${res.getHeaderNames()})"
 
             //check that the Access-Control-Allow-Credentials is always single-valued
             if (res.getHeaderNames().contains('Access-Control-Allow-Credentials')) {
-                assert res.getHeaders('Access-Control-Allow-Credentials').size() == 1
+                assert res.headers('Access-Control-Allow-Credentials').size() == 1
             }
             //check that the Access-Control-Allow-Origin is always single-valued,
             //since we always set Access-Control-Allow-Credentials
             if (res.getHeaderNames().contains('Access-Control-Allow-Origin')) {
-                assert res.getHeaders('Access-Control-Allow-Origin').size() == 1
+                assert res.headers('Access-Control-Allow-Origin').size() == 1
             }
 
         }
     }
-
 }

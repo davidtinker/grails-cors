@@ -18,7 +18,7 @@ import com.brandseye.cors.CorsCompatibleBasicAuthenticationEntryPoint
 import com.brandseye.cors.CorsFilter
 
 class CorsGrailsPlugin {
-    def version = "1.1.4"
+    def version = "1.1.5"
     def grailsVersion = "2.0 > *"
     def title = "CORS Plugin"
     def author = "David Tinker"
