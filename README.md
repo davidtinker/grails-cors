@@ -122,6 +122,9 @@ limitations under the License.
 
 Changelog
 ---------
+1.1.6:
+- Reverted to building plugin with Grails 2.2.1. Version 1.1.5 wasn't working with a Grails 2.0.3 app
+
 1.1.5:
 - Got rid of deprecated ConfigHolder so plugin works with Grails 2.4
 - Removed css and other junk (was causing issues with asset pipeline)

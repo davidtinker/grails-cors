@@ -26,7 +26,7 @@ grails.project.dependency.resolution = {
 
     dependencies {
         //test ":grails-test-suite-base:$grailsVersion"
-    	String springSecurityVersion = '3.2.3.RELEASE'
+    	String springSecurityVersion = '3.0.7.RELEASE'
         compile("org.springframework.security:spring-security-core:$springSecurityVersion") {
             transitive = false
         }
@@ -38,7 +38,7 @@ grails.project.dependency.resolution = {
 
     plugins {
         compile ":webxml:1.4.1"
-        build(":release:3.0.1", ":rest-client-builder:1.0.3") {
+        build(":release:2.0.4", ":rest-client-builder:1.0.2") {
            export = false
         }
     }
