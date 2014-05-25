@@ -124,7 +124,7 @@ Changelog
 ---------
 1.1.5:
 - Got rid of deprecated ConfigHolder so plugin works with Grails 2.4
-- 
+- Removed css and other junk (was causing issues with asset pipeline)
 
 1.1.4:
 - Fixed issue with Access-Control-Allow-Origin in cors.headers being ignored. If cors.headers does not contain
