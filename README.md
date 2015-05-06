@@ -122,6 +122,9 @@ limitations under the License.
 
 Changelog
 ---------
+1.1.7:
+- Merged PR for Spring Security 2 plugin (thanks neoecos). This plugin will no longer work with Spring Security < 2.0.
+
 1.1.6:
 - Reverted to building plugin with Grails 2.2.1. Version 1.1.5 wasn't working with a Grails 2.0.3 app
 
