@@ -130,6 +130,9 @@ limitations under the License.
 
 Changelog
 ---------
+1.1.8:
+- Adding support for external configuration files and travis.yml file
+
 1.1.7:
 - Merged PR for Spring Security 2 plugin (thanks neoecos). This plugin will no longer work with Spring Security < 2.0.
 
