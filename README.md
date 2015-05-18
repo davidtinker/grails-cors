@@ -1,6 +1,8 @@
 CORS Plugin
 ===========
 
+[![Build Status](https://travis-ci.org/Grails-Plugin-Consortium/grails-cors.svg?branch=master)](https://travis-ci.org/Grails-Plugin-Consortium/grails-cors)
+
 Grails plugin to add Cross-Origin Resource Sharing (CORS) headers for Grails applications.
 These headers make it possible for Javascript code served from a different host to easily make calls to your
 application.
@@ -16,7 +18,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.1.4"
+        runtime ":cors:1.1.8"
         ...
     }
 
@@ -131,7 +133,7 @@ limitations under the License.
 Changelog
 ---------
 1.1.8:
-- Adding support for external configuration files and travis.yml file
+- Adding support for external configuration files and travis.yml file (thanks ctoestreich)
 
 1.1.7:
 - Merged PR for Spring Security 2 plugin (thanks neoecos). This plugin will no longer work with Spring Security < 2.0.
