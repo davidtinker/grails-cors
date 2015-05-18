@@ -49,11 +49,19 @@ This parameter also accepts a list of patterns to match:
 
     cors.url.pattern = ['/service1/*', '/service2/*']
 
+Due to the 'Stringy' nature of external properties files, url patterns can be configured using a comma seperated string such as:
+
+    cors.url.pattern = /api/*, /api-docs/*
+
 You can override the default values used for the headers by supplying a headers map:
 
     cors.headers = [
         'Access-Control-Allow-Origin': 'http://app.example.com',
         'My-Custom-Header': 'some value']
+
+Due to the 'Stringy' nature of external properties files, headers can be configured using a single line 'string' map:
+
+    cors.headers = ['Access-Control-Allow-Origin': 'http://app.example.com','My-Custom-Header': 'some value']
 
 Note that if you want to specify more than one host for 'Access-Control-Allow-Origin' there are issues with
 browser support. The recommended approach is to check the 'Origin' header of the request and echo it back
@@ -122,6 +130,9 @@ limitations under the License.
 
 Changelog
 ---------
+1.1.8:
+- Adding support for external configuration files and travis.yml file
+
 1.1.7:
 - Merged PR for Spring Security 2 plugin (thanks neoecos). This plugin will no longer work with Spring Security < 2.0.
 

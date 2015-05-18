@@ -18,7 +18,7 @@ import com.brandseye.cors.CorsCompatibleBasicAuthenticationEntryPoint
 import com.brandseye.cors.CorsFilter
 
 class CorsGrailsPlugin {
-    def version = "1.1.7"
+    def version = "1.1.8"
     def grailsVersion = "2.0 > *"
     def title = "CORS Plugin"
     def author = "David Tinker"
@@ -67,6 +67,16 @@ class CorsGrailsPlugin {
                             'param-value'(v)
                         }
                     }
+                } else if (cfg.headers instanceof String) {
+                    def headerMap = Eval.me(cfg.headers?.toString())
+                    if(headerMap instanceof Map){
+                        cfg.headers.each { k,v ->
+                            'init-param' {
+                                'param-name'('header:' + k)
+                                'param-value'(v)
+                            }
+                        }
+                    }
                 }
                 if (cfg.expose.headers) {
                     'init-param' {
@@ -77,11 +87,11 @@ class CorsGrailsPlugin {
             }
         }
 
-        def urlPattern = cfg.url.pattern ?: '/*'
-        List list = urlPattern instanceof List ? urlPattern : [urlPattern]
+        def patterns = cfg.url.pattern ?: '/*'
+        def urlPatterns = patterns instanceof List ? patterns : patterns.split(',').collect{ it.trim() }
 
         def filter = xml.'filter'
-        list.each { pattern ->
+        urlPatterns.each { pattern ->
             filter[0] + {
                 'filter-mapping'{
                     'filter-name'('cors-headers')

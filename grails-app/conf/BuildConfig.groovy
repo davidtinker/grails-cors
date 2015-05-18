@@ -21,7 +21,12 @@ grails.project.dependency.resolution = {
     log "warn"
 
     repositories {
+        grailsPlugins()
+        grailsHome()
         grailsCentral()
+        mavenLocal()
+        mavenCentral()
+        mavenRepo "https://repo.grails.org/grails/plugins"
     }
 
     dependencies {
@@ -38,8 +43,8 @@ grails.project.dependency.resolution = {
 
     plugins {
         compile ":webxml:1.4.1"
-        build(":release:2.0.4", ":rest-client-builder:1.0.2") {
-           export = false
+        build (':release:2.2.1', ':rest-client-builder:1.0.3') {
+            export = false
         }
     }
 }
