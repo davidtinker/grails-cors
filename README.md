@@ -12,6 +12,42 @@ application.
 
 It is not easy to do this in a Grails application due to the following bug: http://jira.grails.org/browse/GRAILS-5531
 
+Grails 3+
+---------
+
+This plugin does not work with Grails 3. To handle CORS in a Grails 3 project you can just include a servlet filter:
+
+    public class CorsFilter extends OncePerRequestFilter {
+    
+        public CorsFilter() { }
+    
+        @Override
+        protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
+                throws ServletException, IOException {
+    
+            String origin = req.getHeader("Origin");
+    
+            boolean options = "OPTIONS".equals(req.getMethod());
+            if (options) {
+                if (origin == null) return;
+                resp.addHeader("Access-Control-Allow-Headers", "origin, authorization, accept, content-type, x-requested-with");
+                resp.addHeader("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS");
+                resp.addHeader("Access-Control-Max-Age", "3600");
+            }
+    
+            resp.addHeader("Access-Control-Allow-Origin", origin == null ? "*" : origin);
+            resp.addHeader("Access-Control-Allow-Credentials", "true");
+    
+            if (!options) chain.doFilter(req, resp);
+        }
+    }
+    
+Reference the filter in resources.groovy:
+
+    beans = {
+        corsFilter(CorsFilter)
+    }
+
 Using
 -----
 
@@ -132,6 +168,9 @@ limitations under the License.
 
 Changelog
 ---------
+1.1.9:
+- Fixed bug with external config eval
+
 1.1.8:
 - Adding support for external configuration files and travis.yml file (thanks ctoestreich)
 
