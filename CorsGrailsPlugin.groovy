@@ -18,7 +18,7 @@ import com.brandseye.cors.CorsCompatibleBasicAuthenticationEntryPoint
 import com.brandseye.cors.CorsFilter
 
 class CorsGrailsPlugin {
-    def version = "1.1.8"
+    def version = "1.1.9"
     def grailsVersion = "2.0 > *"
     def title = "CORS Plugin"
     def author = "David Tinker"
@@ -70,7 +70,7 @@ class CorsGrailsPlugin {
                 } else if (cfg.headers instanceof String) {
                     def headerMap = Eval.me(cfg.headers?.toString())
                     if(headerMap instanceof Map){
-                        cfg.headers.each { k,v ->
+                        headerMap.each { k,v ->
                             'init-param' {
                                 'param-name'('header:' + k)
                                 'param-value'(v)
