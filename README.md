@@ -15,8 +15,10 @@ It is not easy to do this in a Grails application due to the following bug: http
 Grails 3+
 ---------
 
-This plugin does not work with Grails 3. To handle CORS in a Grails 3 project you can just include a servlet filter:
+This plugin does not work with Grails 3. To handle CORS in a Grails 3 project you can just create a servlet filter
+somewhere under ```src/main/java```:
 
+    @Priority(Integer.MIN_VALUE)
     public class CorsFilter extends OncePerRequestFilter {
     
         public CorsFilter() { }
@@ -42,7 +44,7 @@ This plugin does not work with Grails 3. To handle CORS in a Grails 3 project yo
         }
     }
     
-Reference the filter in resources.groovy:
+Reference the filter in ```grails-app/conf/spring/resources.groovy```:
 
     beans = {
         corsFilter(CorsFilter)
