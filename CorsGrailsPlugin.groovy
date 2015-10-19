@@ -84,6 +84,12 @@ class CorsGrailsPlugin {
                         'param-value'(cfg.expose.headers.toString())
                     }
                 }
+                if (cfg.enable.logging) {
+                    'init-param' {
+                        'param-name'('enable.logging')
+                        'param-value'(cfg.enable.logging.toString())
+                    }
+                }
             }
         }
 

@@ -24,17 +24,22 @@ import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * Adds CORS headers to requests to enable cross-site AJAX calls.
  */
 public class CorsFilter implements Filter {
 
+    private static Logger logger = LoggerFactory.getLogger(CorsFilter.class);
+
     private final Map<String, String> optionsHeaders = new LinkedHashMap<String, String>();
 
     private Pattern allowOriginRegex;
     private String allowOrigin;
     private String exposeHeaders;
+    private boolean enableLogging;
 
     public void init(FilterConfig cfg) throws ServletException {
         optionsHeaders.put("Access-Control-Allow-Headers", "origin, authorization, accept, content-type, x-requested-with");
@@ -54,6 +59,13 @@ public class CorsFilter implements Filter {
         allowOrigin = optionsHeaders.remove("Access-Control-Allow-Origin");
 
         exposeHeaders = cfg.getInitParameter("expose.headers");
+
+        String logging = cfg.getInitParameter("enable.logging");
+        if(logging != null && logging.equalsIgnoreCase("true")){
+            enableLogging = true;
+        } else {
+            enableLogging = false;
+        }
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
@@ -86,6 +98,10 @@ public class CorsFilter implements Filter {
         String origin = req.getHeader("Origin");
         if (origin == null) {
             //no origin; per W3C spec, terminate further processing for both preflight and actual requests
+            if(enableLogging){
+                logger.error("No origin header for request");
+                logger.error(requestToString(req));
+            }
             return false;
         }
 
@@ -102,8 +118,41 @@ public class CorsFilter implements Filter {
             resp.addHeader("Access-Control-Allow-Credentials", "true");
             return true;
         } else {
+            if(enableLogging){
+                logger.error("Origin header is present but does not match to allowed origin");
+                logger.error(requestToString(req));
+            }
             return false;
         }
+    }
+
+    private String requestToString(HttpServletRequest req){
+        String reqStr = "==================Request details start=================\r\n";
+        reqStr += requestUrl(req);
+        reqStr += requestHeaders(req);
+        reqStr += "==================Request details end=================\n";
+        return reqStr;
+    }
+
+    private String requestUrl(HttpServletRequest req) {
+        String reqUrl = req.getRequestURL().toString();
+        String queryString = req.getQueryString();
+        if (queryString != null) {
+            reqUrl += "?"+queryString;
+        }
+        return "Url: " + reqUrl + "\r\n";
+    }
+
+    private String requestHeaders(HttpServletRequest req) {
+        String reqHeaders = "Headers:\n";
+        Enumeration<String> headerNames = req.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            reqHeaders += "\t" + headerName + ": ";
+            String headerValue = req.getHeader(headerName);
+            reqHeaders += headerValue + "\r\n";
+        }
+        return reqHeaders;
     }
 
     public void destroy() {
