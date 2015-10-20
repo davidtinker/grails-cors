@@ -56,7 +56,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.1.8"
+        runtime ":cors:1.2.0"
         ...
     }
 
@@ -121,6 +121,10 @@ This can be combined with cors.allow.origin.regex to limit allowed domains.
 You can specify a comma-delimited list of response headers that should be exposed to the client:
 
     cors.expose.headers = 'X-app-header1,X-app-header2'
+    
+You can enable logging of failed requests:
+
+    cors.enable.logging = true
 
 You can disable the filter if needed. Note that the filter defaults to enabled.
 
@@ -170,6 +174,9 @@ limitations under the License.
 
 Changelog
 ---------
+1.2.0:
+- Added support for logging failed requests (cors.enable.logging=true, thanks arrucard)
+
 1.1.9:
 - Fixed bug with external config eval
 
