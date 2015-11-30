@@ -56,7 +56,7 @@ Using
 Add a dependency to BuildConfig.groovy:
 
     plugins {
-        runtime ":cors:1.2.0"
+        runtime ":cors:1.3.0"
         ...
     }
 
@@ -122,6 +122,10 @@ You can specify a comma-delimited list of response headers that should be expose
 
     cors.expose.headers = 'X-app-header1,X-app-header2'
     
+You can accept any Access-Control-Request-Headers as follows:
+
+    cors.headers = ['Access-Control-Allow-Headers': '*']
+    
 You can enable logging of failed requests:
 
     cors.enable.logging = true
@@ -174,6 +178,9 @@ limitations under the License.
 
 Changelog
 ---------
+1.3.0:
+- Added support for Access-Control-Allow-Headers="*" to echo back requested headers (thanks pablitar)
+
 1.2.0:
 - Added support for logging failed requests (cors.enable.logging=true, thanks arrucard)
 
