@@ -32,6 +32,7 @@ import org.slf4j.Logger;
  */
 public class CorsFilter implements Filter {
 
+    private static final String ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers";
     private static Logger logger = LoggerFactory.getLogger(CorsFilter.class);
 
     private final Map<String, String> optionsHeaders = new LinkedHashMap<String, String>();
@@ -42,7 +43,7 @@ public class CorsFilter implements Filter {
     private boolean enableLogging;
 
     public void init(FilterConfig cfg) throws ServletException {
-        optionsHeaders.put("Access-Control-Allow-Headers", "origin, authorization, accept, content-type, x-requested-with");
+        optionsHeaders.put(ACCESS_CONTROL_ALLOW_HEADERS, "origin, authorization, accept, content-type, x-requested-with");
         optionsHeaders.put("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS");
         optionsHeaders.put("Access-Control-Max-Age", "3600");
         for (Enumeration<String> i = cfg.getInitParameterNames(); i.hasMoreElements(); ) {
@@ -75,8 +76,13 @@ public class CorsFilter implements Filter {
             HttpServletResponse resp = (HttpServletResponse)response;
             if ("OPTIONS".equals(req.getMethod())) {
                 if (checkOrigin(req, resp)) {
+                    String accessControlRequestHeaders = req.getHeader("Access-Control-Request-Headers");
                     for (Map.Entry<String, String> e : optionsHeaders.entrySet()) {
-                        resp.addHeader(e.getKey(), e.getValue());
+                        if(ACCESS_CONTROL_ALLOW_HEADERS.equals(e.getKey()) && "*".equals(e.getValue()) && accessControlRequestHeaders != null){
+                            resp.addHeader(ACCESS_CONTROL_ALLOW_HEADERS, accessControlRequestHeaders);
+                        } else {
+                            resp.addHeader(e.getKey(), e.getValue());
+                        }
                     }
 
                     // We need to return here since we don't want the chain to further process

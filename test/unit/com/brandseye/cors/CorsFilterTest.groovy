@@ -110,6 +110,22 @@ class CorsFilterTest extends GroovyTestCase {
         executeTest(filterInitParams,expectedHeadersForHttpMethods,origin)
     }
 
+    public void testAllowAllHeaders() {
+        def headers = ["Access-Control-Allow-Origin","Access-Control-Allow-Credentials","Access-Control-Request-Headers"]
+        def expectedHeadersForHttpMethods = [
+                'OPTIONS':defaultHeadersForAllowedOptionsRequest,
+                'GET':minimalHeadersForAllAllowedRequests,
+                'PUT':minimalHeadersForAllAllowedRequests,
+                'DELETE':minimalHeadersForAllAllowedRequests,
+                'POST':minimalHeadersForAllAllowedRequests
+        ]
+        def filterInitParams = [:]
+        filterInitParams['header:Access-Control-Allow-Headers'] = '*'
+        String origin = "http://www.grails.org"
+        executeTest(filterInitParams,expectedHeadersForHttpMethods,origin, ['Access-Control-Request-Headers':'X-custom-header'])
+    }
+
+
     public void testValueOfExposedHeaders() {
         def underTest = new CorsFilter()
         def expected = 'X-custom-header1,X-custom-header2'
@@ -178,7 +194,7 @@ class CorsFilterTest extends GroovyTestCase {
         assert null == res.getHeader('Access-Control-Allow-Origin')
     }
 
-    private void executeTest(Map<String,String> filterInitParams,Map<String,Set<String>> expectedHeadersForHttpMethods,String origin){
+    private void executeTest(Map<String,String> filterInitParams,Map<String,Set<String>> expectedHeadersForHttpMethods,String origin, Map<String, String> requestHeaders = [:]){
         underTest = new CorsFilter()
         MockFilterConfig filterConfig = new MockFilterConfig()
         filterInitParams.entrySet().each {filterEntry->
@@ -193,6 +209,9 @@ class CorsFilterTest extends GroovyTestCase {
             HttpServletRequest req = new MockHttpServletRequest()
             req.setMethod(httpMethod)
             req.addHeader("Origin",origin)
+            requestHeaders.entrySet().each {
+                req.addHeader(it.key, it.value)
+            }
             HttpServletResponse res = new GrailsMockHttpServletResponse()
             underTest.doFilter(req,res,new MockFilterChain())
             assert  res.getHeaderNames().containsAll(expectedHeaders) : "Not all expected headers for request $httpMethod and origin $origin could be found! (expected: $expectedHeaders, got: ${res.getHeaderNames()})"
