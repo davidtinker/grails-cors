@@ -162,7 +162,7 @@ So if you can authenticate or whatever using query parameters instead of headers
 License
 -------
 
-Copyright 2013 BrandsEye (http://www.brandseye.com/)
+Copyright 2013-2022 DataEQ (http://www.dataeq.com/)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
